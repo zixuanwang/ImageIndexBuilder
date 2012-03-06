@@ -17,14 +17,13 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
 public class ImageIndexBuilder {
 	static class Mapper1 extends TableMapper<LongWritable, PostingWritable> {
-
-		// private int numRecords = 0;
 		private TTransport mTransport = null;
 		private TProtocol mProtocol = null;
 		private ImageDaemon.Client mClient = null;
@@ -37,7 +36,6 @@ public class ImageIndexBuilder {
 			return sb.toString();
 		}
 
-		@Override
 		public void map(ImmutableBytesWritable row, Result values,
 				Context context) throws IOException {
 			try {
@@ -65,7 +63,7 @@ public class ImageIndexBuilder {
 		@Override
 		public void setup(Context context) {
 			// set up the connection to the local thrift server
-			mTransport = new TSocket("localhost", 9992);
+			mTransport = new TFramedTransport(new TSocket("localhost", 9992));
 			mProtocol = new TBinaryProtocol(mTransport);
 			mClient = new ImageDaemon.Client(mProtocol);
 			try {
@@ -73,7 +71,6 @@ public class ImageIndexBuilder {
 			} catch (TTransportException e) {
 				e.printStackTrace();
 			}
-
 		}
 
 		@Override
@@ -86,7 +83,7 @@ public class ImageIndexBuilder {
 			TableReducer<LongWritable, PostingWritable, ImmutableBytesWritable> {
 		private TTransport mTransport = null;
 		private TProtocol mProtocol = null;
-		private ImageDaemon.Client mClient = null;
+		private InvertedIndexDaemon.Client mClient = null;
 
 		@Override
 		public void reduce(LongWritable key, Iterable<PostingWritable> values,
@@ -94,12 +91,12 @@ public class ImageIndexBuilder {
 			List<Posting> postingArray = new ArrayList<Posting>();
 			for (PostingWritable val : values) {
 				Posting p = new Posting();
-				p.imageID = val.imageId.get();
+				p.imageId = val.imageId.get();
 				p.score = val.score.get();
 				postingArray.add(p);
 			}
 			try {
-				mClient.addPostingList(key.get(), postingArray);
+				mClient.savePostingList(key.get(), postingArray);
 			} catch (TException e) {
 				e.printStackTrace();
 			}
@@ -107,9 +104,9 @@ public class ImageIndexBuilder {
 
 		@Override
 		public void setup(Context context) {
-			mTransport = new TSocket("localhost", 9992);
+			mTransport = new TFramedTransport(new TSocket("node1", 9991));
 			mProtocol = new TBinaryProtocol(mTransport);
-			mClient = new ImageDaemon.Client(mProtocol);
+			mClient = new InvertedIndexDaemon.Client(mProtocol);
 			try {
 				mTransport.open();
 			} catch (TTransportException e) {

@@ -28,15 +28,13 @@ public class ImageDaemon {
 
     public List<Bin> getBoWFeature(long rowKey) throws org.apache.thrift.TException;
 
-    public void addPostingList(long visualwordID, List<Posting> postingArray) throws org.apache.thrift.TException;
-
-    public void addImage(String imageHash, long imageKey) throws org.apache.thrift.TException;
-
     public void computeColorFeature(long rowKey) throws org.apache.thrift.TException;
 
     public List<String> query(String imagePath) throws org.apache.thrift.TException;
 
-    public void loadInvertedIndex() throws org.apache.thrift.TException;
+    public void addImage(String imageHash, long rowKey) throws org.apache.thrift.TException;
+
+    public void indexImage(String imageHash, long rowKey) throws org.apache.thrift.TException;
 
   }
 
@@ -44,15 +42,13 @@ public class ImageDaemon {
 
     public void getBoWFeature(long rowKey, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.getBoWFeature_call> resultHandler) throws org.apache.thrift.TException;
 
-    public void addPostingList(long visualwordID, List<Posting> postingArray, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.addPostingList_call> resultHandler) throws org.apache.thrift.TException;
-
-    public void addImage(String imageHash, long imageKey, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.addImage_call> resultHandler) throws org.apache.thrift.TException;
-
     public void computeColorFeature(long rowKey, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.computeColorFeature_call> resultHandler) throws org.apache.thrift.TException;
 
     public void query(String imagePath, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.query_call> resultHandler) throws org.apache.thrift.TException;
 
-    public void loadInvertedIndex(org.apache.thrift.async.AsyncMethodCallback<AsyncClient.loadInvertedIndex_call> resultHandler) throws org.apache.thrift.TException;
+    public void addImage(String imageHash, long rowKey, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.addImage_call> resultHandler) throws org.apache.thrift.TException;
+
+    public void indexImage(String imageHash, long rowKey, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.indexImage_call> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -99,48 +95,6 @@ public class ImageDaemon {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "getBoWFeature failed: unknown result");
     }
 
-    public void addPostingList(long visualwordID, List<Posting> postingArray) throws org.apache.thrift.TException
-    {
-      send_addPostingList(visualwordID, postingArray);
-      recv_addPostingList();
-    }
-
-    public void send_addPostingList(long visualwordID, List<Posting> postingArray) throws org.apache.thrift.TException
-    {
-      addPostingList_args args = new addPostingList_args();
-      args.setVisualwordID(visualwordID);
-      args.setPostingArray(postingArray);
-      sendBase("addPostingList", args);
-    }
-
-    public void recv_addPostingList() throws org.apache.thrift.TException
-    {
-      addPostingList_result result = new addPostingList_result();
-      receiveBase(result, "addPostingList");
-      return;
-    }
-
-    public void addImage(String imageHash, long imageKey) throws org.apache.thrift.TException
-    {
-      send_addImage(imageHash, imageKey);
-      recv_addImage();
-    }
-
-    public void send_addImage(String imageHash, long imageKey) throws org.apache.thrift.TException
-    {
-      addImage_args args = new addImage_args();
-      args.setImageHash(imageHash);
-      args.setImageKey(imageKey);
-      sendBase("addImage", args);
-    }
-
-    public void recv_addImage() throws org.apache.thrift.TException
-    {
-      addImage_result result = new addImage_result();
-      receiveBase(result, "addImage");
-      return;
-    }
-
     public void computeColorFeature(long rowKey) throws org.apache.thrift.TException
     {
       send_computeColorFeature(rowKey);
@@ -184,22 +138,45 @@ public class ImageDaemon {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "query failed: unknown result");
     }
 
-    public void loadInvertedIndex() throws org.apache.thrift.TException
+    public void addImage(String imageHash, long rowKey) throws org.apache.thrift.TException
     {
-      send_loadInvertedIndex();
-      recv_loadInvertedIndex();
+      send_addImage(imageHash, rowKey);
+      recv_addImage();
     }
 
-    public void send_loadInvertedIndex() throws org.apache.thrift.TException
+    public void send_addImage(String imageHash, long rowKey) throws org.apache.thrift.TException
     {
-      loadInvertedIndex_args args = new loadInvertedIndex_args();
-      sendBase("loadInvertedIndex", args);
+      addImage_args args = new addImage_args();
+      args.setImageHash(imageHash);
+      args.setRowKey(rowKey);
+      sendBase("addImage", args);
     }
 
-    public void recv_loadInvertedIndex() throws org.apache.thrift.TException
+    public void recv_addImage() throws org.apache.thrift.TException
     {
-      loadInvertedIndex_result result = new loadInvertedIndex_result();
-      receiveBase(result, "loadInvertedIndex");
+      addImage_result result = new addImage_result();
+      receiveBase(result, "addImage");
+      return;
+    }
+
+    public void indexImage(String imageHash, long rowKey) throws org.apache.thrift.TException
+    {
+      send_indexImage(imageHash, rowKey);
+      recv_indexImage();
+    }
+
+    public void send_indexImage(String imageHash, long rowKey) throws org.apache.thrift.TException
+    {
+      indexImage_args args = new indexImage_args();
+      args.setImageHash(imageHash);
+      args.setRowKey(rowKey);
+      sendBase("indexImage", args);
+    }
+
+    public void recv_indexImage() throws org.apache.thrift.TException
+    {
+      indexImage_result result = new indexImage_result();
+      receiveBase(result, "indexImage");
       return;
     }
 
@@ -250,76 +227,6 @@ public class ImageDaemon {
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
         return (new Client(prot)).recv_getBoWFeature();
-      }
-    }
-
-    public void addPostingList(long visualwordID, List<Posting> postingArray, org.apache.thrift.async.AsyncMethodCallback<addPostingList_call> resultHandler) throws org.apache.thrift.TException {
-      checkReady();
-      addPostingList_call method_call = new addPostingList_call(visualwordID, postingArray, resultHandler, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class addPostingList_call extends org.apache.thrift.async.TAsyncMethodCall {
-      private long visualwordID;
-      private List<Posting> postingArray;
-      public addPostingList_call(long visualwordID, List<Posting> postingArray, org.apache.thrift.async.AsyncMethodCallback<addPostingList_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, false);
-        this.visualwordID = visualwordID;
-        this.postingArray = postingArray;
-      }
-
-      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("addPostingList", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        addPostingList_args args = new addPostingList_args();
-        args.setVisualwordID(visualwordID);
-        args.setPostingArray(postingArray);
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public void getResult() throws org.apache.thrift.TException {
-        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
-          throw new IllegalStateException("Method call not finished!");
-        }
-        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
-        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        (new Client(prot)).recv_addPostingList();
-      }
-    }
-
-    public void addImage(String imageHash, long imageKey, org.apache.thrift.async.AsyncMethodCallback<addImage_call> resultHandler) throws org.apache.thrift.TException {
-      checkReady();
-      addImage_call method_call = new addImage_call(imageHash, imageKey, resultHandler, this, ___protocolFactory, ___transport);
-      this.___currentMethod = method_call;
-      ___manager.call(method_call);
-    }
-
-    public static class addImage_call extends org.apache.thrift.async.TAsyncMethodCall {
-      private String imageHash;
-      private long imageKey;
-      public addImage_call(String imageHash, long imageKey, org.apache.thrift.async.AsyncMethodCallback<addImage_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, false);
-        this.imageHash = imageHash;
-        this.imageKey = imageKey;
-      }
-
-      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("addImage", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        addImage_args args = new addImage_args();
-        args.setImageHash(imageHash);
-        args.setImageKey(imageKey);
-        args.write(prot);
-        prot.writeMessageEnd();
-      }
-
-      public void getResult() throws org.apache.thrift.TException {
-        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
-          throw new IllegalStateException("Method call not finished!");
-        }
-        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
-        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        (new Client(prot)).recv_addImage();
       }
     }
 
@@ -387,21 +294,27 @@ public class ImageDaemon {
       }
     }
 
-    public void loadInvertedIndex(org.apache.thrift.async.AsyncMethodCallback<loadInvertedIndex_call> resultHandler) throws org.apache.thrift.TException {
+    public void addImage(String imageHash, long rowKey, org.apache.thrift.async.AsyncMethodCallback<addImage_call> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      loadInvertedIndex_call method_call = new loadInvertedIndex_call(resultHandler, this, ___protocolFactory, ___transport);
+      addImage_call method_call = new addImage_call(imageHash, rowKey, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class loadInvertedIndex_call extends org.apache.thrift.async.TAsyncMethodCall {
-      public loadInvertedIndex_call(org.apache.thrift.async.AsyncMethodCallback<loadInvertedIndex_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+    public static class addImage_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private String imageHash;
+      private long rowKey;
+      public addImage_call(String imageHash, long rowKey, org.apache.thrift.async.AsyncMethodCallback<addImage_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
+        this.imageHash = imageHash;
+        this.rowKey = rowKey;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("loadInvertedIndex", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        loadInvertedIndex_args args = new loadInvertedIndex_args();
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("addImage", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        addImage_args args = new addImage_args();
+        args.setImageHash(imageHash);
+        args.setRowKey(rowKey);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -412,7 +325,42 @@ public class ImageDaemon {
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        (new Client(prot)).recv_loadInvertedIndex();
+        (new Client(prot)).recv_addImage();
+      }
+    }
+
+    public void indexImage(String imageHash, long rowKey, org.apache.thrift.async.AsyncMethodCallback<indexImage_call> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      indexImage_call method_call = new indexImage_call(imageHash, rowKey, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class indexImage_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private String imageHash;
+      private long rowKey;
+      public indexImage_call(String imageHash, long rowKey, org.apache.thrift.async.AsyncMethodCallback<indexImage_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.imageHash = imageHash;
+        this.rowKey = rowKey;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("indexImage", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        indexImage_args args = new indexImage_args();
+        args.setImageHash(imageHash);
+        args.setRowKey(rowKey);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public void getResult() throws org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        (new Client(prot)).recv_indexImage();
       }
     }
 
@@ -430,11 +378,10 @@ public class ImageDaemon {
 
     private static <I extends Iface> Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> getProcessMap(Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
       processMap.put("getBoWFeature", new getBoWFeature());
-      processMap.put("addPostingList", new addPostingList());
-      processMap.put("addImage", new addImage());
       processMap.put("computeColorFeature", new computeColorFeature());
       processMap.put("query", new query());
-      processMap.put("loadInvertedIndex", new loadInvertedIndex());
+      processMap.put("addImage", new addImage());
+      processMap.put("indexImage", new indexImage());
       return processMap;
     }
 
@@ -450,38 +397,6 @@ public class ImageDaemon {
       protected getBoWFeature_result getResult(I iface, getBoWFeature_args args) throws org.apache.thrift.TException {
         getBoWFeature_result result = new getBoWFeature_result();
         result.success = iface.getBoWFeature(args.rowKey);
-        return result;
-      }
-    }
-
-    private static class addPostingList<I extends Iface> extends org.apache.thrift.ProcessFunction<I, addPostingList_args> {
-      public addPostingList() {
-        super("addPostingList");
-      }
-
-      protected addPostingList_args getEmptyArgsInstance() {
-        return new addPostingList_args();
-      }
-
-      protected addPostingList_result getResult(I iface, addPostingList_args args) throws org.apache.thrift.TException {
-        addPostingList_result result = new addPostingList_result();
-        iface.addPostingList(args.visualwordID, args.postingArray);
-        return result;
-      }
-    }
-
-    private static class addImage<I extends Iface> extends org.apache.thrift.ProcessFunction<I, addImage_args> {
-      public addImage() {
-        super("addImage");
-      }
-
-      protected addImage_args getEmptyArgsInstance() {
-        return new addImage_args();
-      }
-
-      protected addImage_result getResult(I iface, addImage_args args) throws org.apache.thrift.TException {
-        addImage_result result = new addImage_result();
-        iface.addImage(args.imageHash, args.imageKey);
         return result;
       }
     }
@@ -518,18 +433,34 @@ public class ImageDaemon {
       }
     }
 
-    private static class loadInvertedIndex<I extends Iface> extends org.apache.thrift.ProcessFunction<I, loadInvertedIndex_args> {
-      public loadInvertedIndex() {
-        super("loadInvertedIndex");
+    private static class addImage<I extends Iface> extends org.apache.thrift.ProcessFunction<I, addImage_args> {
+      public addImage() {
+        super("addImage");
       }
 
-      protected loadInvertedIndex_args getEmptyArgsInstance() {
-        return new loadInvertedIndex_args();
+      protected addImage_args getEmptyArgsInstance() {
+        return new addImage_args();
       }
 
-      protected loadInvertedIndex_result getResult(I iface, loadInvertedIndex_args args) throws org.apache.thrift.TException {
-        loadInvertedIndex_result result = new loadInvertedIndex_result();
-        iface.loadInvertedIndex();
+      protected addImage_result getResult(I iface, addImage_args args) throws org.apache.thrift.TException {
+        addImage_result result = new addImage_result();
+        iface.addImage(args.imageHash, args.rowKey);
+        return result;
+      }
+    }
+
+    private static class indexImage<I extends Iface> extends org.apache.thrift.ProcessFunction<I, indexImage_args> {
+      public indexImage() {
+        super("indexImage");
+      }
+
+      protected indexImage_args getEmptyArgsInstance() {
+        return new indexImage_args();
+      }
+
+      protected indexImage_result getResult(I iface, indexImage_args args) throws org.apache.thrift.TException {
+        indexImage_result result = new indexImage_result();
+        iface.indexImage(args.imageHash, args.rowKey);
         return result;
       }
     }
@@ -1290,1454 +1221,6 @@ public class ImageDaemon {
           }
           struct.setSuccessIsSet(true);
         }
-      }
-    }
-
-  }
-
-  public static class addPostingList_args implements org.apache.thrift.TBase<addPostingList_args, addPostingList_args._Fields>, java.io.Serializable, Cloneable   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("addPostingList_args");
-
-    private static final org.apache.thrift.protocol.TField VISUALWORD_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("visualwordID", org.apache.thrift.protocol.TType.I64, (short)1);
-    private static final org.apache.thrift.protocol.TField POSTING_ARRAY_FIELD_DESC = new org.apache.thrift.protocol.TField("postingArray", org.apache.thrift.protocol.TType.LIST, (short)2);
-
-    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
-    static {
-      schemes.put(StandardScheme.class, new addPostingList_argsStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new addPostingList_argsTupleSchemeFactory());
-    }
-
-    public long visualwordID; // required
-    public List<Posting> postingArray; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      VISUALWORD_ID((short)1, "visualwordID"),
-      POSTING_ARRAY((short)2, "postingArray");
-
-      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
-
-      static {
-        for (_Fields field : EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 1: // VISUALWORD_ID
-            return VISUALWORD_ID;
-          case 2: // POSTING_ARRAY
-            return POSTING_ARRAY;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final String _fieldName;
-
-      _Fields(short thriftId, String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    private static final int __VISUALWORDID_ISSET_ID = 0;
-    private BitSet __isset_bit_vector = new BitSet(1);
-    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.VISUALWORD_ID, new org.apache.thrift.meta_data.FieldMetaData("visualwordID", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-      tmpMap.put(_Fields.POSTING_ARRAY, new org.apache.thrift.meta_data.FieldMetaData("postingArray", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
-              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, Posting.class))));
-      metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(addPostingList_args.class, metaDataMap);
-    }
-
-    public addPostingList_args() {
-    }
-
-    public addPostingList_args(
-      long visualwordID,
-      List<Posting> postingArray)
-    {
-      this();
-      this.visualwordID = visualwordID;
-      setVisualwordIDIsSet(true);
-      this.postingArray = postingArray;
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public addPostingList_args(addPostingList_args other) {
-      __isset_bit_vector.clear();
-      __isset_bit_vector.or(other.__isset_bit_vector);
-      this.visualwordID = other.visualwordID;
-      if (other.isSetPostingArray()) {
-        List<Posting> __this__postingArray = new ArrayList<Posting>();
-        for (Posting other_element : other.postingArray) {
-          __this__postingArray.add(new Posting(other_element));
-        }
-        this.postingArray = __this__postingArray;
-      }
-    }
-
-    public addPostingList_args deepCopy() {
-      return new addPostingList_args(this);
-    }
-
-    @Override
-    public void clear() {
-      setVisualwordIDIsSet(false);
-      this.visualwordID = 0;
-      this.postingArray = null;
-    }
-
-    public long getVisualwordID() {
-      return this.visualwordID;
-    }
-
-    public addPostingList_args setVisualwordID(long visualwordID) {
-      this.visualwordID = visualwordID;
-      setVisualwordIDIsSet(true);
-      return this;
-    }
-
-    public void unsetVisualwordID() {
-      __isset_bit_vector.clear(__VISUALWORDID_ISSET_ID);
-    }
-
-    /** Returns true if field visualwordID is set (has been assigned a value) and false otherwise */
-    public boolean isSetVisualwordID() {
-      return __isset_bit_vector.get(__VISUALWORDID_ISSET_ID);
-    }
-
-    public void setVisualwordIDIsSet(boolean value) {
-      __isset_bit_vector.set(__VISUALWORDID_ISSET_ID, value);
-    }
-
-    public int getPostingArraySize() {
-      return (this.postingArray == null) ? 0 : this.postingArray.size();
-    }
-
-    public java.util.Iterator<Posting> getPostingArrayIterator() {
-      return (this.postingArray == null) ? null : this.postingArray.iterator();
-    }
-
-    public void addToPostingArray(Posting elem) {
-      if (this.postingArray == null) {
-        this.postingArray = new ArrayList<Posting>();
-      }
-      this.postingArray.add(elem);
-    }
-
-    public List<Posting> getPostingArray() {
-      return this.postingArray;
-    }
-
-    public addPostingList_args setPostingArray(List<Posting> postingArray) {
-      this.postingArray = postingArray;
-      return this;
-    }
-
-    public void unsetPostingArray() {
-      this.postingArray = null;
-    }
-
-    /** Returns true if field postingArray is set (has been assigned a value) and false otherwise */
-    public boolean isSetPostingArray() {
-      return this.postingArray != null;
-    }
-
-    public void setPostingArrayIsSet(boolean value) {
-      if (!value) {
-        this.postingArray = null;
-      }
-    }
-
-    public void setFieldValue(_Fields field, Object value) {
-      switch (field) {
-      case VISUALWORD_ID:
-        if (value == null) {
-          unsetVisualwordID();
-        } else {
-          setVisualwordID((Long)value);
-        }
-        break;
-
-      case POSTING_ARRAY:
-        if (value == null) {
-          unsetPostingArray();
-        } else {
-          setPostingArray((List<Posting>)value);
-        }
-        break;
-
-      }
-    }
-
-    public Object getFieldValue(_Fields field) {
-      switch (field) {
-      case VISUALWORD_ID:
-        return Long.valueOf(getVisualwordID());
-
-      case POSTING_ARRAY:
-        return getPostingArray();
-
-      }
-      throw new IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new IllegalArgumentException();
-      }
-
-      switch (field) {
-      case VISUALWORD_ID:
-        return isSetVisualwordID();
-      case POSTING_ARRAY:
-        return isSetPostingArray();
-      }
-      throw new IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof addPostingList_args)
-        return this.equals((addPostingList_args)that);
-      return false;
-    }
-
-    public boolean equals(addPostingList_args that) {
-      if (that == null)
-        return false;
-
-      boolean this_present_visualwordID = true;
-      boolean that_present_visualwordID = true;
-      if (this_present_visualwordID || that_present_visualwordID) {
-        if (!(this_present_visualwordID && that_present_visualwordID))
-          return false;
-        if (this.visualwordID != that.visualwordID)
-          return false;
-      }
-
-      boolean this_present_postingArray = true && this.isSetPostingArray();
-      boolean that_present_postingArray = true && that.isSetPostingArray();
-      if (this_present_postingArray || that_present_postingArray) {
-        if (!(this_present_postingArray && that_present_postingArray))
-          return false;
-        if (!this.postingArray.equals(that.postingArray))
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return 0;
-    }
-
-    public int compareTo(addPostingList_args other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-      addPostingList_args typedOther = (addPostingList_args)other;
-
-      lastComparison = Boolean.valueOf(isSetVisualwordID()).compareTo(typedOther.isSetVisualwordID());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetVisualwordID()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.visualwordID, typedOther.visualwordID);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = Boolean.valueOf(isSetPostingArray()).compareTo(typedOther.isSetPostingArray());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetPostingArray()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.postingArray, typedOther.postingArray);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
-    }
-
-    @Override
-    public String toString() {
-      StringBuilder sb = new StringBuilder("addPostingList_args(");
-      boolean first = true;
-
-      sb.append("visualwordID:");
-      sb.append(this.visualwordID);
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("postingArray:");
-      if (this.postingArray == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.postingArray);
-      }
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
-      try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bit_vector = new BitSet(1);
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class addPostingList_argsStandardSchemeFactory implements SchemeFactory {
-      public addPostingList_argsStandardScheme getScheme() {
-        return new addPostingList_argsStandardScheme();
-      }
-    }
-
-    private static class addPostingList_argsStandardScheme extends StandardScheme<addPostingList_args> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, addPostingList_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 1: // VISUALWORD_ID
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.visualwordID = iprot.readI64();
-                struct.setVisualwordIDIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 2: // POSTING_ARRAY
-              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
-                {
-                  org.apache.thrift.protocol.TList _list8 = iprot.readListBegin();
-                  struct.postingArray = new ArrayList<Posting>(_list8.size);
-                  for (int _i9 = 0; _i9 < _list8.size; ++_i9)
-                  {
-                    Posting _elem10; // required
-                    _elem10 = new Posting();
-                    _elem10.read(iprot);
-                    struct.postingArray.add(_elem10);
-                  }
-                  iprot.readListEnd();
-                }
-                struct.setPostingArrayIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, addPostingList_args struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldBegin(VISUALWORD_ID_FIELD_DESC);
-        oprot.writeI64(struct.visualwordID);
-        oprot.writeFieldEnd();
-        if (struct.postingArray != null) {
-          oprot.writeFieldBegin(POSTING_ARRAY_FIELD_DESC);
-          {
-            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.postingArray.size()));
-            for (Posting _iter11 : struct.postingArray)
-            {
-              _iter11.write(oprot);
-            }
-            oprot.writeListEnd();
-          }
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class addPostingList_argsTupleSchemeFactory implements SchemeFactory {
-      public addPostingList_argsTupleScheme getScheme() {
-        return new addPostingList_argsTupleScheme();
-      }
-    }
-
-    private static class addPostingList_argsTupleScheme extends TupleScheme<addPostingList_args> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, addPostingList_args struct) throws org.apache.thrift.TException {
-        TTupleProtocol oprot = (TTupleProtocol) prot;
-        BitSet optionals = new BitSet();
-        if (struct.isSetVisualwordID()) {
-          optionals.set(0);
-        }
-        if (struct.isSetPostingArray()) {
-          optionals.set(1);
-        }
-        oprot.writeBitSet(optionals, 2);
-        if (struct.isSetVisualwordID()) {
-          oprot.writeI64(struct.visualwordID);
-        }
-        if (struct.isSetPostingArray()) {
-          {
-            oprot.writeI32(struct.postingArray.size());
-            for (Posting _iter12 : struct.postingArray)
-            {
-              _iter12.write(oprot);
-            }
-          }
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, addPostingList_args struct) throws org.apache.thrift.TException {
-        TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(2);
-        if (incoming.get(0)) {
-          struct.visualwordID = iprot.readI64();
-          struct.setVisualwordIDIsSet(true);
-        }
-        if (incoming.get(1)) {
-          {
-            org.apache.thrift.protocol.TList _list13 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, iprot.readI32());
-            struct.postingArray = new ArrayList<Posting>(_list13.size);
-            for (int _i14 = 0; _i14 < _list13.size; ++_i14)
-            {
-              Posting _elem15; // required
-              _elem15 = new Posting();
-              _elem15.read(iprot);
-              struct.postingArray.add(_elem15);
-            }
-          }
-          struct.setPostingArrayIsSet(true);
-        }
-      }
-    }
-
-  }
-
-  public static class addPostingList_result implements org.apache.thrift.TBase<addPostingList_result, addPostingList_result._Fields>, java.io.Serializable, Cloneable   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("addPostingList_result");
-
-
-    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
-    static {
-      schemes.put(StandardScheme.class, new addPostingList_resultStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new addPostingList_resultTupleSchemeFactory());
-    }
-
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
-
-      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
-
-      static {
-        for (_Fields field : EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final String _fieldName;
-
-      _Fields(short thriftId, String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public String getFieldName() {
-        return _fieldName;
-      }
-    }
-    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(addPostingList_result.class, metaDataMap);
-    }
-
-    public addPostingList_result() {
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public addPostingList_result(addPostingList_result other) {
-    }
-
-    public addPostingList_result deepCopy() {
-      return new addPostingList_result(this);
-    }
-
-    @Override
-    public void clear() {
-    }
-
-    public void setFieldValue(_Fields field, Object value) {
-      switch (field) {
-      }
-    }
-
-    public Object getFieldValue(_Fields field) {
-      switch (field) {
-      }
-      throw new IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new IllegalArgumentException();
-      }
-
-      switch (field) {
-      }
-      throw new IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof addPostingList_result)
-        return this.equals((addPostingList_result)that);
-      return false;
-    }
-
-    public boolean equals(addPostingList_result that) {
-      if (that == null)
-        return false;
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return 0;
-    }
-
-    public int compareTo(addPostingList_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-      addPostingList_result typedOther = (addPostingList_result)other;
-
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
-      }
-
-    @Override
-    public String toString() {
-      StringBuilder sb = new StringBuilder("addPostingList_result(");
-      boolean first = true;
-
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class addPostingList_resultStandardSchemeFactory implements SchemeFactory {
-      public addPostingList_resultStandardScheme getScheme() {
-        return new addPostingList_resultStandardScheme();
-      }
-    }
-
-    private static class addPostingList_resultStandardScheme extends StandardScheme<addPostingList_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, addPostingList_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, addPostingList_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class addPostingList_resultTupleSchemeFactory implements SchemeFactory {
-      public addPostingList_resultTupleScheme getScheme() {
-        return new addPostingList_resultTupleScheme();
-      }
-    }
-
-    private static class addPostingList_resultTupleScheme extends TupleScheme<addPostingList_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, addPostingList_result struct) throws org.apache.thrift.TException {
-        TTupleProtocol oprot = (TTupleProtocol) prot;
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, addPostingList_result struct) throws org.apache.thrift.TException {
-        TTupleProtocol iprot = (TTupleProtocol) prot;
-      }
-    }
-
-  }
-
-  public static class addImage_args implements org.apache.thrift.TBase<addImage_args, addImage_args._Fields>, java.io.Serializable, Cloneable   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("addImage_args");
-
-    private static final org.apache.thrift.protocol.TField IMAGE_HASH_FIELD_DESC = new org.apache.thrift.protocol.TField("imageHash", org.apache.thrift.protocol.TType.STRING, (short)1);
-    private static final org.apache.thrift.protocol.TField IMAGE_KEY_FIELD_DESC = new org.apache.thrift.protocol.TField("imageKey", org.apache.thrift.protocol.TType.I64, (short)2);
-
-    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
-    static {
-      schemes.put(StandardScheme.class, new addImage_argsStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new addImage_argsTupleSchemeFactory());
-    }
-
-    public String imageHash; // required
-    public long imageKey; // required
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      IMAGE_HASH((short)1, "imageHash"),
-      IMAGE_KEY((short)2, "imageKey");
-
-      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
-
-      static {
-        for (_Fields field : EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          case 1: // IMAGE_HASH
-            return IMAGE_HASH;
-          case 2: // IMAGE_KEY
-            return IMAGE_KEY;
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final String _fieldName;
-
-      _Fields(short thriftId, String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public String getFieldName() {
-        return _fieldName;
-      }
-    }
-
-    // isset id assignments
-    private static final int __IMAGEKEY_ISSET_ID = 0;
-    private BitSet __isset_bit_vector = new BitSet(1);
-    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.IMAGE_HASH, new org.apache.thrift.meta_data.FieldMetaData("imageHash", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-      tmpMap.put(_Fields.IMAGE_KEY, new org.apache.thrift.meta_data.FieldMetaData("imageKey", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
-      metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(addImage_args.class, metaDataMap);
-    }
-
-    public addImage_args() {
-    }
-
-    public addImage_args(
-      String imageHash,
-      long imageKey)
-    {
-      this();
-      this.imageHash = imageHash;
-      this.imageKey = imageKey;
-      setImageKeyIsSet(true);
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public addImage_args(addImage_args other) {
-      __isset_bit_vector.clear();
-      __isset_bit_vector.or(other.__isset_bit_vector);
-      if (other.isSetImageHash()) {
-        this.imageHash = other.imageHash;
-      }
-      this.imageKey = other.imageKey;
-    }
-
-    public addImage_args deepCopy() {
-      return new addImage_args(this);
-    }
-
-    @Override
-    public void clear() {
-      this.imageHash = null;
-      setImageKeyIsSet(false);
-      this.imageKey = 0;
-    }
-
-    public String getImageHash() {
-      return this.imageHash;
-    }
-
-    public addImage_args setImageHash(String imageHash) {
-      this.imageHash = imageHash;
-      return this;
-    }
-
-    public void unsetImageHash() {
-      this.imageHash = null;
-    }
-
-    /** Returns true if field imageHash is set (has been assigned a value) and false otherwise */
-    public boolean isSetImageHash() {
-      return this.imageHash != null;
-    }
-
-    public void setImageHashIsSet(boolean value) {
-      if (!value) {
-        this.imageHash = null;
-      }
-    }
-
-    public long getImageKey() {
-      return this.imageKey;
-    }
-
-    public addImage_args setImageKey(long imageKey) {
-      this.imageKey = imageKey;
-      setImageKeyIsSet(true);
-      return this;
-    }
-
-    public void unsetImageKey() {
-      __isset_bit_vector.clear(__IMAGEKEY_ISSET_ID);
-    }
-
-    /** Returns true if field imageKey is set (has been assigned a value) and false otherwise */
-    public boolean isSetImageKey() {
-      return __isset_bit_vector.get(__IMAGEKEY_ISSET_ID);
-    }
-
-    public void setImageKeyIsSet(boolean value) {
-      __isset_bit_vector.set(__IMAGEKEY_ISSET_ID, value);
-    }
-
-    public void setFieldValue(_Fields field, Object value) {
-      switch (field) {
-      case IMAGE_HASH:
-        if (value == null) {
-          unsetImageHash();
-        } else {
-          setImageHash((String)value);
-        }
-        break;
-
-      case IMAGE_KEY:
-        if (value == null) {
-          unsetImageKey();
-        } else {
-          setImageKey((Long)value);
-        }
-        break;
-
-      }
-    }
-
-    public Object getFieldValue(_Fields field) {
-      switch (field) {
-      case IMAGE_HASH:
-        return getImageHash();
-
-      case IMAGE_KEY:
-        return Long.valueOf(getImageKey());
-
-      }
-      throw new IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new IllegalArgumentException();
-      }
-
-      switch (field) {
-      case IMAGE_HASH:
-        return isSetImageHash();
-      case IMAGE_KEY:
-        return isSetImageKey();
-      }
-      throw new IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof addImage_args)
-        return this.equals((addImage_args)that);
-      return false;
-    }
-
-    public boolean equals(addImage_args that) {
-      if (that == null)
-        return false;
-
-      boolean this_present_imageHash = true && this.isSetImageHash();
-      boolean that_present_imageHash = true && that.isSetImageHash();
-      if (this_present_imageHash || that_present_imageHash) {
-        if (!(this_present_imageHash && that_present_imageHash))
-          return false;
-        if (!this.imageHash.equals(that.imageHash))
-          return false;
-      }
-
-      boolean this_present_imageKey = true;
-      boolean that_present_imageKey = true;
-      if (this_present_imageKey || that_present_imageKey) {
-        if (!(this_present_imageKey && that_present_imageKey))
-          return false;
-        if (this.imageKey != that.imageKey)
-          return false;
-      }
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return 0;
-    }
-
-    public int compareTo(addImage_args other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-      addImage_args typedOther = (addImage_args)other;
-
-      lastComparison = Boolean.valueOf(isSetImageHash()).compareTo(typedOther.isSetImageHash());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetImageHash()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.imageHash, typedOther.imageHash);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = Boolean.valueOf(isSetImageKey()).compareTo(typedOther.isSetImageKey());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetImageKey()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.imageKey, typedOther.imageKey);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
-    }
-
-    @Override
-    public String toString() {
-      StringBuilder sb = new StringBuilder("addImage_args(");
-      boolean first = true;
-
-      sb.append("imageHash:");
-      if (this.imageHash == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.imageHash);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("imageKey:");
-      sb.append(this.imageKey);
-      first = false;
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
-      try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bit_vector = new BitSet(1);
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class addImage_argsStandardSchemeFactory implements SchemeFactory {
-      public addImage_argsStandardScheme getScheme() {
-        return new addImage_argsStandardScheme();
-      }
-    }
-
-    private static class addImage_argsStandardScheme extends StandardScheme<addImage_args> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, addImage_args struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            case 1: // IMAGE_HASH
-              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-                struct.imageHash = iprot.readString();
-                struct.setImageHashIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            case 2: // IMAGE_KEY
-              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
-                struct.imageKey = iprot.readI64();
-                struct.setImageKeyIsSet(true);
-              } else { 
-                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-              }
-              break;
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, addImage_args struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.imageHash != null) {
-          oprot.writeFieldBegin(IMAGE_HASH_FIELD_DESC);
-          oprot.writeString(struct.imageHash);
-          oprot.writeFieldEnd();
-        }
-        oprot.writeFieldBegin(IMAGE_KEY_FIELD_DESC);
-        oprot.writeI64(struct.imageKey);
-        oprot.writeFieldEnd();
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class addImage_argsTupleSchemeFactory implements SchemeFactory {
-      public addImage_argsTupleScheme getScheme() {
-        return new addImage_argsTupleScheme();
-      }
-    }
-
-    private static class addImage_argsTupleScheme extends TupleScheme<addImage_args> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, addImage_args struct) throws org.apache.thrift.TException {
-        TTupleProtocol oprot = (TTupleProtocol) prot;
-        BitSet optionals = new BitSet();
-        if (struct.isSetImageHash()) {
-          optionals.set(0);
-        }
-        if (struct.isSetImageKey()) {
-          optionals.set(1);
-        }
-        oprot.writeBitSet(optionals, 2);
-        if (struct.isSetImageHash()) {
-          oprot.writeString(struct.imageHash);
-        }
-        if (struct.isSetImageKey()) {
-          oprot.writeI64(struct.imageKey);
-        }
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, addImage_args struct) throws org.apache.thrift.TException {
-        TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(2);
-        if (incoming.get(0)) {
-          struct.imageHash = iprot.readString();
-          struct.setImageHashIsSet(true);
-        }
-        if (incoming.get(1)) {
-          struct.imageKey = iprot.readI64();
-          struct.setImageKeyIsSet(true);
-        }
-      }
-    }
-
-  }
-
-  public static class addImage_result implements org.apache.thrift.TBase<addImage_result, addImage_result._Fields>, java.io.Serializable, Cloneable   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("addImage_result");
-
-
-    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
-    static {
-      schemes.put(StandardScheme.class, new addImage_resultStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new addImage_resultTupleSchemeFactory());
-    }
-
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
-
-      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
-
-      static {
-        for (_Fields field : EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          default:
-            return null;
-        }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final String _fieldName;
-
-      _Fields(short thriftId, String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public String getFieldName() {
-        return _fieldName;
-      }
-    }
-    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(addImage_result.class, metaDataMap);
-    }
-
-    public addImage_result() {
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public addImage_result(addImage_result other) {
-    }
-
-    public addImage_result deepCopy() {
-      return new addImage_result(this);
-    }
-
-    @Override
-    public void clear() {
-    }
-
-    public void setFieldValue(_Fields field, Object value) {
-      switch (field) {
-      }
-    }
-
-    public Object getFieldValue(_Fields field) {
-      switch (field) {
-      }
-      throw new IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new IllegalArgumentException();
-      }
-
-      switch (field) {
-      }
-      throw new IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof addImage_result)
-        return this.equals((addImage_result)that);
-      return false;
-    }
-
-    public boolean equals(addImage_result that) {
-      if (that == null)
-        return false;
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      return 0;
-    }
-
-    public int compareTo(addImage_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-      addImage_result typedOther = (addImage_result)other;
-
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
-      }
-
-    @Override
-    public String toString() {
-      StringBuilder sb = new StringBuilder("addImage_result(");
-      boolean first = true;
-
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class addImage_resultStandardSchemeFactory implements SchemeFactory {
-      public addImage_resultStandardScheme getScheme() {
-        return new addImage_resultStandardScheme();
-      }
-    }
-
-    private static class addImage_resultStandardScheme extends StandardScheme<addImage_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, addImage_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, addImage_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class addImage_resultTupleSchemeFactory implements SchemeFactory {
-      public addImage_resultTupleScheme getScheme() {
-        return new addImage_resultTupleScheme();
-      }
-    }
-
-    private static class addImage_resultTupleScheme extends TupleScheme<addImage_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, addImage_result struct) throws org.apache.thrift.TException {
-        TTupleProtocol oprot = (TTupleProtocol) prot;
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, addImage_result struct) throws org.apache.thrift.TException {
-        TTupleProtocol iprot = (TTupleProtocol) prot;
       }
     }
 
@@ -4001,13 +2484,13 @@ public class ImageDaemon {
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list16 = iprot.readListBegin();
-                  struct.success = new ArrayList<String>(_list16.size);
-                  for (int _i17 = 0; _i17 < _list16.size; ++_i17)
+                  org.apache.thrift.protocol.TList _list8 = iprot.readListBegin();
+                  struct.success = new ArrayList<String>(_list8.size);
+                  for (int _i9 = 0; _i9 < _list8.size; ++_i9)
                   {
-                    String _elem18; // required
-                    _elem18 = iprot.readString();
-                    struct.success.add(_elem18);
+                    String _elem10; // required
+                    _elem10 = iprot.readString();
+                    struct.success.add(_elem10);
                   }
                   iprot.readListEnd();
                 }
@@ -4035,9 +2518,9 @@ public class ImageDaemon {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (String _iter19 : struct.success)
+            for (String _iter11 : struct.success)
             {
-              oprot.writeString(_iter19);
+              oprot.writeString(_iter11);
             }
             oprot.writeListEnd();
           }
@@ -4068,9 +2551,9 @@ public class ImageDaemon {
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (String _iter20 : struct.success)
+            for (String _iter12 : struct.success)
             {
-              oprot.writeString(_iter20);
+              oprot.writeString(_iter12);
             }
           }
         }
@@ -4082,13 +2565,13 @@ public class ImageDaemon {
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list21 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, iprot.readI32());
-            struct.success = new ArrayList<String>(_list21.size);
-            for (int _i22 = 0; _i22 < _list21.size; ++_i22)
+            org.apache.thrift.protocol.TList _list13 = new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, iprot.readI32());
+            struct.success = new ArrayList<String>(_list13.size);
+            for (int _i14 = 0; _i14 < _list13.size; ++_i14)
             {
-              String _elem23; // required
-              _elem23 = iprot.readString();
-              struct.success.add(_elem23);
+              String _elem15; // required
+              _elem15 = iprot.readString();
+              struct.success.add(_elem15);
             }
           }
           struct.setSuccessIsSet(true);
@@ -4098,14 +2581,466 @@ public class ImageDaemon {
 
   }
 
-  public static class loadInvertedIndex_args implements org.apache.thrift.TBase<loadInvertedIndex_args, loadInvertedIndex_args._Fields>, java.io.Serializable, Cloneable   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("loadInvertedIndex_args");
+  public static class addImage_args implements org.apache.thrift.TBase<addImage_args, addImage_args._Fields>, java.io.Serializable, Cloneable   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("addImage_args");
+
+    private static final org.apache.thrift.protocol.TField IMAGE_HASH_FIELD_DESC = new org.apache.thrift.protocol.TField("imageHash", org.apache.thrift.protocol.TType.STRING, (short)1);
+    private static final org.apache.thrift.protocol.TField ROW_KEY_FIELD_DESC = new org.apache.thrift.protocol.TField("rowKey", org.apache.thrift.protocol.TType.I64, (short)2);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new addImage_argsStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new addImage_argsTupleSchemeFactory());
+    }
+
+    public String imageHash; // required
+    public long rowKey; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      IMAGE_HASH((short)1, "imageHash"),
+      ROW_KEY((short)2, "rowKey");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // IMAGE_HASH
+            return IMAGE_HASH;
+          case 2: // ROW_KEY
+            return ROW_KEY;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __ROWKEY_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.IMAGE_HASH, new org.apache.thrift.meta_data.FieldMetaData("imageHash", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      tmpMap.put(_Fields.ROW_KEY, new org.apache.thrift.meta_data.FieldMetaData("rowKey", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(addImage_args.class, metaDataMap);
+    }
+
+    public addImage_args() {
+    }
+
+    public addImage_args(
+      String imageHash,
+      long rowKey)
+    {
+      this();
+      this.imageHash = imageHash;
+      this.rowKey = rowKey;
+      setRowKeyIsSet(true);
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public addImage_args(addImage_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
+      if (other.isSetImageHash()) {
+        this.imageHash = other.imageHash;
+      }
+      this.rowKey = other.rowKey;
+    }
+
+    public addImage_args deepCopy() {
+      return new addImage_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.imageHash = null;
+      setRowKeyIsSet(false);
+      this.rowKey = 0;
+    }
+
+    public String getImageHash() {
+      return this.imageHash;
+    }
+
+    public addImage_args setImageHash(String imageHash) {
+      this.imageHash = imageHash;
+      return this;
+    }
+
+    public void unsetImageHash() {
+      this.imageHash = null;
+    }
+
+    /** Returns true if field imageHash is set (has been assigned a value) and false otherwise */
+    public boolean isSetImageHash() {
+      return this.imageHash != null;
+    }
+
+    public void setImageHashIsSet(boolean value) {
+      if (!value) {
+        this.imageHash = null;
+      }
+    }
+
+    public long getRowKey() {
+      return this.rowKey;
+    }
+
+    public addImage_args setRowKey(long rowKey) {
+      this.rowKey = rowKey;
+      setRowKeyIsSet(true);
+      return this;
+    }
+
+    public void unsetRowKey() {
+      __isset_bit_vector.clear(__ROWKEY_ISSET_ID);
+    }
+
+    /** Returns true if field rowKey is set (has been assigned a value) and false otherwise */
+    public boolean isSetRowKey() {
+      return __isset_bit_vector.get(__ROWKEY_ISSET_ID);
+    }
+
+    public void setRowKeyIsSet(boolean value) {
+      __isset_bit_vector.set(__ROWKEY_ISSET_ID, value);
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case IMAGE_HASH:
+        if (value == null) {
+          unsetImageHash();
+        } else {
+          setImageHash((String)value);
+        }
+        break;
+
+      case ROW_KEY:
+        if (value == null) {
+          unsetRowKey();
+        } else {
+          setRowKey((Long)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case IMAGE_HASH:
+        return getImageHash();
+
+      case ROW_KEY:
+        return Long.valueOf(getRowKey());
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case IMAGE_HASH:
+        return isSetImageHash();
+      case ROW_KEY:
+        return isSetRowKey();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof addImage_args)
+        return this.equals((addImage_args)that);
+      return false;
+    }
+
+    public boolean equals(addImage_args that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_imageHash = true && this.isSetImageHash();
+      boolean that_present_imageHash = true && that.isSetImageHash();
+      if (this_present_imageHash || that_present_imageHash) {
+        if (!(this_present_imageHash && that_present_imageHash))
+          return false;
+        if (!this.imageHash.equals(that.imageHash))
+          return false;
+      }
+
+      boolean this_present_rowKey = true;
+      boolean that_present_rowKey = true;
+      if (this_present_rowKey || that_present_rowKey) {
+        if (!(this_present_rowKey && that_present_rowKey))
+          return false;
+        if (this.rowKey != that.rowKey)
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(addImage_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      addImage_args typedOther = (addImage_args)other;
+
+      lastComparison = Boolean.valueOf(isSetImageHash()).compareTo(typedOther.isSetImageHash());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetImageHash()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.imageHash, typedOther.imageHash);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetRowKey()).compareTo(typedOther.isSetRowKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetRowKey()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.rowKey, typedOther.rowKey);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("addImage_args(");
+      boolean first = true;
+
+      sb.append("imageHash:");
+      if (this.imageHash == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.imageHash);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("rowKey:");
+      sb.append(this.rowKey);
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bit_vector = new BitSet(1);
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class addImage_argsStandardSchemeFactory implements SchemeFactory {
+      public addImage_argsStandardScheme getScheme() {
+        return new addImage_argsStandardScheme();
+      }
+    }
+
+    private static class addImage_argsStandardScheme extends StandardScheme<addImage_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, addImage_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // IMAGE_HASH
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.imageHash = iprot.readString();
+                struct.setImageHashIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // ROW_KEY
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.rowKey = iprot.readI64();
+                struct.setRowKeyIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, addImage_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.imageHash != null) {
+          oprot.writeFieldBegin(IMAGE_HASH_FIELD_DESC);
+          oprot.writeString(struct.imageHash);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldBegin(ROW_KEY_FIELD_DESC);
+        oprot.writeI64(struct.rowKey);
+        oprot.writeFieldEnd();
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class addImage_argsTupleSchemeFactory implements SchemeFactory {
+      public addImage_argsTupleScheme getScheme() {
+        return new addImage_argsTupleScheme();
+      }
+    }
+
+    private static class addImage_argsTupleScheme extends TupleScheme<addImage_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, addImage_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetImageHash()) {
+          optionals.set(0);
+        }
+        if (struct.isSetRowKey()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetImageHash()) {
+          oprot.writeString(struct.imageHash);
+        }
+        if (struct.isSetRowKey()) {
+          oprot.writeI64(struct.rowKey);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, addImage_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.imageHash = iprot.readString();
+          struct.setImageHashIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.rowKey = iprot.readI64();
+          struct.setRowKeyIsSet(true);
+        }
+      }
+    }
+
+  }
+
+  public static class addImage_result implements org.apache.thrift.TBase<addImage_result, addImage_result._Fields>, java.io.Serializable, Cloneable   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("addImage_result");
 
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
-      schemes.put(StandardScheme.class, new loadInvertedIndex_argsStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new loadInvertedIndex_argsTupleSchemeFactory());
+      schemes.put(StandardScheme.class, new addImage_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new addImage_resultTupleSchemeFactory());
     }
 
 
@@ -4168,20 +3103,20 @@ public class ImageDaemon {
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(loadInvertedIndex_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(addImage_result.class, metaDataMap);
     }
 
-    public loadInvertedIndex_args() {
+    public addImage_result() {
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public loadInvertedIndex_args(loadInvertedIndex_args other) {
+    public addImage_result(addImage_result other) {
     }
 
-    public loadInvertedIndex_args deepCopy() {
-      return new loadInvertedIndex_args(this);
+    public addImage_result deepCopy() {
+      return new addImage_result(this);
     }
 
     @Override
@@ -4214,12 +3149,12 @@ public class ImageDaemon {
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof loadInvertedIndex_args)
-        return this.equals((loadInvertedIndex_args)that);
+      if (that instanceof addImage_result)
+        return this.equals((addImage_result)that);
       return false;
     }
 
-    public boolean equals(loadInvertedIndex_args that) {
+    public boolean equals(addImage_result that) {
       if (that == null)
         return false;
 
@@ -4231,13 +3166,13 @@ public class ImageDaemon {
       return 0;
     }
 
-    public int compareTo(loadInvertedIndex_args other) {
+    public int compareTo(addImage_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
 
       int lastComparison = 0;
-      loadInvertedIndex_args typedOther = (loadInvertedIndex_args)other;
+      addImage_result typedOther = (addImage_result)other;
 
       return 0;
     }
@@ -4252,11 +3187,11 @@ public class ImageDaemon {
 
     public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
       schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
-    }
+      }
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("loadInvertedIndex_args(");
+      StringBuilder sb = new StringBuilder("addImage_result(");
       boolean first = true;
 
       sb.append(")");
@@ -4283,15 +3218,15 @@ public class ImageDaemon {
       }
     }
 
-    private static class loadInvertedIndex_argsStandardSchemeFactory implements SchemeFactory {
-      public loadInvertedIndex_argsStandardScheme getScheme() {
-        return new loadInvertedIndex_argsStandardScheme();
+    private static class addImage_resultStandardSchemeFactory implements SchemeFactory {
+      public addImage_resultStandardScheme getScheme() {
+        return new addImage_resultStandardScheme();
       }
     }
 
-    private static class loadInvertedIndex_argsStandardScheme extends StandardScheme<loadInvertedIndex_args> {
+    private static class addImage_resultStandardScheme extends StandardScheme<addImage_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, loadInvertedIndex_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, addImage_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -4312,7 +3247,7 @@ public class ImageDaemon {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, loadInvertedIndex_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, addImage_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -4322,35 +3257,487 @@ public class ImageDaemon {
 
     }
 
-    private static class loadInvertedIndex_argsTupleSchemeFactory implements SchemeFactory {
-      public loadInvertedIndex_argsTupleScheme getScheme() {
-        return new loadInvertedIndex_argsTupleScheme();
+    private static class addImage_resultTupleSchemeFactory implements SchemeFactory {
+      public addImage_resultTupleScheme getScheme() {
+        return new addImage_resultTupleScheme();
       }
     }
 
-    private static class loadInvertedIndex_argsTupleScheme extends TupleScheme<loadInvertedIndex_args> {
+    private static class addImage_resultTupleScheme extends TupleScheme<addImage_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, loadInvertedIndex_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, addImage_result struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, loadInvertedIndex_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, addImage_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
       }
     }
 
   }
 
-  public static class loadInvertedIndex_result implements org.apache.thrift.TBase<loadInvertedIndex_result, loadInvertedIndex_result._Fields>, java.io.Serializable, Cloneable   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("loadInvertedIndex_result");
+  public static class indexImage_args implements org.apache.thrift.TBase<indexImage_args, indexImage_args._Fields>, java.io.Serializable, Cloneable   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("indexImage_args");
+
+    private static final org.apache.thrift.protocol.TField IMAGE_HASH_FIELD_DESC = new org.apache.thrift.protocol.TField("imageHash", org.apache.thrift.protocol.TType.STRING, (short)1);
+    private static final org.apache.thrift.protocol.TField ROW_KEY_FIELD_DESC = new org.apache.thrift.protocol.TField("rowKey", org.apache.thrift.protocol.TType.I64, (short)2);
+
+    private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+    static {
+      schemes.put(StandardScheme.class, new indexImage_argsStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new indexImage_argsTupleSchemeFactory());
+    }
+
+    public String imageHash; // required
+    public long rowKey; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      IMAGE_HASH((short)1, "imageHash"),
+      ROW_KEY((short)2, "rowKey");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // IMAGE_HASH
+            return IMAGE_HASH;
+          case 2: // ROW_KEY
+            return ROW_KEY;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __ROWKEY_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.IMAGE_HASH, new org.apache.thrift.meta_data.FieldMetaData("imageHash", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      tmpMap.put(_Fields.ROW_KEY, new org.apache.thrift.meta_data.FieldMetaData("rowKey", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I64)));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(indexImage_args.class, metaDataMap);
+    }
+
+    public indexImage_args() {
+    }
+
+    public indexImage_args(
+      String imageHash,
+      long rowKey)
+    {
+      this();
+      this.imageHash = imageHash;
+      this.rowKey = rowKey;
+      setRowKeyIsSet(true);
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public indexImage_args(indexImage_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
+      if (other.isSetImageHash()) {
+        this.imageHash = other.imageHash;
+      }
+      this.rowKey = other.rowKey;
+    }
+
+    public indexImage_args deepCopy() {
+      return new indexImage_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.imageHash = null;
+      setRowKeyIsSet(false);
+      this.rowKey = 0;
+    }
+
+    public String getImageHash() {
+      return this.imageHash;
+    }
+
+    public indexImage_args setImageHash(String imageHash) {
+      this.imageHash = imageHash;
+      return this;
+    }
+
+    public void unsetImageHash() {
+      this.imageHash = null;
+    }
+
+    /** Returns true if field imageHash is set (has been assigned a value) and false otherwise */
+    public boolean isSetImageHash() {
+      return this.imageHash != null;
+    }
+
+    public void setImageHashIsSet(boolean value) {
+      if (!value) {
+        this.imageHash = null;
+      }
+    }
+
+    public long getRowKey() {
+      return this.rowKey;
+    }
+
+    public indexImage_args setRowKey(long rowKey) {
+      this.rowKey = rowKey;
+      setRowKeyIsSet(true);
+      return this;
+    }
+
+    public void unsetRowKey() {
+      __isset_bit_vector.clear(__ROWKEY_ISSET_ID);
+    }
+
+    /** Returns true if field rowKey is set (has been assigned a value) and false otherwise */
+    public boolean isSetRowKey() {
+      return __isset_bit_vector.get(__ROWKEY_ISSET_ID);
+    }
+
+    public void setRowKeyIsSet(boolean value) {
+      __isset_bit_vector.set(__ROWKEY_ISSET_ID, value);
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case IMAGE_HASH:
+        if (value == null) {
+          unsetImageHash();
+        } else {
+          setImageHash((String)value);
+        }
+        break;
+
+      case ROW_KEY:
+        if (value == null) {
+          unsetRowKey();
+        } else {
+          setRowKey((Long)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case IMAGE_HASH:
+        return getImageHash();
+
+      case ROW_KEY:
+        return Long.valueOf(getRowKey());
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case IMAGE_HASH:
+        return isSetImageHash();
+      case ROW_KEY:
+        return isSetRowKey();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof indexImage_args)
+        return this.equals((indexImage_args)that);
+      return false;
+    }
+
+    public boolean equals(indexImage_args that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_imageHash = true && this.isSetImageHash();
+      boolean that_present_imageHash = true && that.isSetImageHash();
+      if (this_present_imageHash || that_present_imageHash) {
+        if (!(this_present_imageHash && that_present_imageHash))
+          return false;
+        if (!this.imageHash.equals(that.imageHash))
+          return false;
+      }
+
+      boolean this_present_rowKey = true;
+      boolean that_present_rowKey = true;
+      if (this_present_rowKey || that_present_rowKey) {
+        if (!(this_present_rowKey && that_present_rowKey))
+          return false;
+        if (this.rowKey != that.rowKey)
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(indexImage_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      indexImage_args typedOther = (indexImage_args)other;
+
+      lastComparison = Boolean.valueOf(isSetImageHash()).compareTo(typedOther.isSetImageHash());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetImageHash()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.imageHash, typedOther.imageHash);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetRowKey()).compareTo(typedOther.isSetRowKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetRowKey()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.rowKey, typedOther.rowKey);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("indexImage_args(");
+      boolean first = true;
+
+      sb.append("imageHash:");
+      if (this.imageHash == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.imageHash);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("rowKey:");
+      sb.append(this.rowKey);
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bit_vector = new BitSet(1);
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class indexImage_argsStandardSchemeFactory implements SchemeFactory {
+      public indexImage_argsStandardScheme getScheme() {
+        return new indexImage_argsStandardScheme();
+      }
+    }
+
+    private static class indexImage_argsStandardScheme extends StandardScheme<indexImage_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, indexImage_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // IMAGE_HASH
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.imageHash = iprot.readString();
+                struct.setImageHashIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // ROW_KEY
+              if (schemeField.type == org.apache.thrift.protocol.TType.I64) {
+                struct.rowKey = iprot.readI64();
+                struct.setRowKeyIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, indexImage_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.imageHash != null) {
+          oprot.writeFieldBegin(IMAGE_HASH_FIELD_DESC);
+          oprot.writeString(struct.imageHash);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldBegin(ROW_KEY_FIELD_DESC);
+        oprot.writeI64(struct.rowKey);
+        oprot.writeFieldEnd();
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class indexImage_argsTupleSchemeFactory implements SchemeFactory {
+      public indexImage_argsTupleScheme getScheme() {
+        return new indexImage_argsTupleScheme();
+      }
+    }
+
+    private static class indexImage_argsTupleScheme extends TupleScheme<indexImage_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, indexImage_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol oprot = (TTupleProtocol) prot;
+        BitSet optionals = new BitSet();
+        if (struct.isSetImageHash()) {
+          optionals.set(0);
+        }
+        if (struct.isSetRowKey()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetImageHash()) {
+          oprot.writeString(struct.imageHash);
+        }
+        if (struct.isSetRowKey()) {
+          oprot.writeI64(struct.rowKey);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, indexImage_args struct) throws org.apache.thrift.TException {
+        TTupleProtocol iprot = (TTupleProtocol) prot;
+        BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.imageHash = iprot.readString();
+          struct.setImageHashIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.rowKey = iprot.readI64();
+          struct.setRowKeyIsSet(true);
+        }
+      }
+    }
+
+  }
+
+  public static class indexImage_result implements org.apache.thrift.TBase<indexImage_result, indexImage_result._Fields>, java.io.Serializable, Cloneable   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("indexImage_result");
 
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
-      schemes.put(StandardScheme.class, new loadInvertedIndex_resultStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new loadInvertedIndex_resultTupleSchemeFactory());
+      schemes.put(StandardScheme.class, new indexImage_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new indexImage_resultTupleSchemeFactory());
     }
 
 
@@ -4413,20 +3800,20 @@ public class ImageDaemon {
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(loadInvertedIndex_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(indexImage_result.class, metaDataMap);
     }
 
-    public loadInvertedIndex_result() {
+    public indexImage_result() {
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public loadInvertedIndex_result(loadInvertedIndex_result other) {
+    public indexImage_result(indexImage_result other) {
     }
 
-    public loadInvertedIndex_result deepCopy() {
-      return new loadInvertedIndex_result(this);
+    public indexImage_result deepCopy() {
+      return new indexImage_result(this);
     }
 
     @Override
@@ -4459,12 +3846,12 @@ public class ImageDaemon {
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof loadInvertedIndex_result)
-        return this.equals((loadInvertedIndex_result)that);
+      if (that instanceof indexImage_result)
+        return this.equals((indexImage_result)that);
       return false;
     }
 
-    public boolean equals(loadInvertedIndex_result that) {
+    public boolean equals(indexImage_result that) {
       if (that == null)
         return false;
 
@@ -4476,13 +3863,13 @@ public class ImageDaemon {
       return 0;
     }
 
-    public int compareTo(loadInvertedIndex_result other) {
+    public int compareTo(indexImage_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
 
       int lastComparison = 0;
-      loadInvertedIndex_result typedOther = (loadInvertedIndex_result)other;
+      indexImage_result typedOther = (indexImage_result)other;
 
       return 0;
     }
@@ -4501,7 +3888,7 @@ public class ImageDaemon {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("loadInvertedIndex_result(");
+      StringBuilder sb = new StringBuilder("indexImage_result(");
       boolean first = true;
 
       sb.append(")");
@@ -4528,15 +3915,15 @@ public class ImageDaemon {
       }
     }
 
-    private static class loadInvertedIndex_resultStandardSchemeFactory implements SchemeFactory {
-      public loadInvertedIndex_resultStandardScheme getScheme() {
-        return new loadInvertedIndex_resultStandardScheme();
+    private static class indexImage_resultStandardSchemeFactory implements SchemeFactory {
+      public indexImage_resultStandardScheme getScheme() {
+        return new indexImage_resultStandardScheme();
       }
     }
 
-    private static class loadInvertedIndex_resultStandardScheme extends StandardScheme<loadInvertedIndex_result> {
+    private static class indexImage_resultStandardScheme extends StandardScheme<indexImage_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, loadInvertedIndex_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, indexImage_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -4557,7 +3944,7 @@ public class ImageDaemon {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, loadInvertedIndex_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, indexImage_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
@@ -4567,21 +3954,21 @@ public class ImageDaemon {
 
     }
 
-    private static class loadInvertedIndex_resultTupleSchemeFactory implements SchemeFactory {
-      public loadInvertedIndex_resultTupleScheme getScheme() {
-        return new loadInvertedIndex_resultTupleScheme();
+    private static class indexImage_resultTupleSchemeFactory implements SchemeFactory {
+      public indexImage_resultTupleScheme getScheme() {
+        return new indexImage_resultTupleScheme();
       }
     }
 
-    private static class loadInvertedIndex_resultTupleScheme extends TupleScheme<loadInvertedIndex_result> {
+    private static class indexImage_resultTupleScheme extends TupleScheme<indexImage_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, loadInvertedIndex_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, indexImage_result struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, loadInvertedIndex_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, indexImage_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
       }
     }

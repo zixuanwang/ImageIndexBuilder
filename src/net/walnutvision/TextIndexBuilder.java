@@ -30,10 +30,16 @@ public class TextIndexBuilder {
 						Bytes.toBytes("nm_0")));
 				String price = Bytes.toString(values.getValue(family,
 						Bytes.toBytes("ap_0")));
+				String imageHash = Bytes.toString(values.getValue(family,
+						Bytes.toBytes("fii_0")));
+				String url = Bytes.toString(values.getValue(family,
+						Bytes.toBytes("u_0")));
 				SolrInputDocument doc = new SolrInputDocument();
 				doc.addField("id", id);
 				doc.addField("name", name);
 				doc.addField("price", price);
+				doc.addField("imagehash", imageHash);
+				doc.addField("url", url);
 				mSolrServer.add(doc);
 			} catch (SolrServerException e) {
 				e.printStackTrace();
@@ -67,6 +73,7 @@ public class TextIndexBuilder {
 		Job job = new Job(conf, "TextIndexBuilder");
 		job.setJarByClass(TextIndexBuilder.class);
 		job.setMapperClass(Mapper1.class);
+		job.setNumReduceTasks(0);
 		Scan scan = new Scan();
 		TableMapReduceUtil.initTableMapperJob("item", scan, Mapper1.class,
 				NullWritable.class, NullWritable.class, job);

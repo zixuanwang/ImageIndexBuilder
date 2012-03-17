@@ -15,7 +15,7 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 		try {
-			String url = "http://192.168.11.101:8080/solr";
+			String url = "http://walnutvision.stanford.edu:8080/solr";
 			SolrServer solrServer = new CommonsHttpSolrServer(url);
 			SolrInputDocument doc = new SolrInputDocument();
 			doc.addField("id", "id0");

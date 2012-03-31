@@ -5,7 +5,11 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import org.apache.commons.io.EndianUtils;
 import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.client.Get;
+import org.apache.hadoop.hbase.client.HTable;
+import org.apache.hadoop.hbase.client.HTablePool;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
@@ -22,8 +26,10 @@ import org.apache.solr.common.SolrInputDocument;
 public class TextIndexBuilder {
 	static class Mapper1 extends TableMapper<NullWritable, NullWritable> {
 		private SolrServer mSolrServer = null;
+		private HTablePool mHTablePool = null;
 
-		public ArrayList<String> buildHierarchyCategory(ArrayList<String> category) {
+		public ArrayList<String> buildHierarchyCategory(
+				ArrayList<String> category) {
 			ArrayList<String> ret = new ArrayList<String>();
 			int levelCount = 0;
 			String current = "";
@@ -45,8 +51,8 @@ public class TextIndexBuilder {
 						Bytes.toBytes("nm_0")));
 				String price = Bytes.toString(values.getValue(family,
 						Bytes.toBytes("ap_0")));
-				String imageHash = Bytes.toString(values.getValue(family,
-						Bytes.toBytes("fii_0")));
+				ArrayList<String> imageHashArray = HbaseAdapter.getColumn(
+						values, family, "fii_");
 				String url = Bytes.toString(values.getValue(family,
 						Bytes.toBytes("u_0")));
 				String merchant = Bytes.toString(values.getValue(family,
@@ -69,19 +75,34 @@ public class TextIndexBuilder {
 					categoryArray.add(category);
 					++cpIndex;
 				}
+
 				SolrInputDocument doc = new SolrInputDocument();
 				doc.addField("id", id);
 				doc.addField("name", name);
 				doc.addField("price", price);
-				doc.addField("imagehash", imageHash);
 				doc.addField("url", url);
 				doc.addField("merchant", merchant);
+				// add categories of the product
 				for (ArrayList<String> category : categoryArray) {
 					ArrayList<String> hierarchyCategoryArray = buildHierarchyCategory(category);
 					for (String hierarchyCategory : hierarchyCategoryArray) {
 						doc.addField("category", hierarchyCategory);
 					}
 				}
+				// add image ids and image hashes of the product
+				HTable imageTable = (HTable) mHTablePool.getTable("image");
+				byte[] idColumn = Bytes.toBytes("id_0");
+				for (String imageHash : imageHashArray) {
+					Get get = new Get(Bytes.toBytes(imageHash));
+					get.addColumn(family, idColumn);
+					Result result = imageTable.get(get);
+					byte[] bId = result.getValue(family, idColumn);
+					long imagekey = EndianUtils.readSwappedLong(bId, 0);
+					doc.addField("imagehash", imageHash);
+					doc.addField("imagekey", imagekey);
+					//System.out.println("" + imageId);
+				}
+				mHTablePool.putTable(imageTable);
 				mSolrServer.add(doc);
 			} catch (SolrServerException e) {
 				e.printStackTrace();
@@ -92,6 +113,7 @@ public class TextIndexBuilder {
 		public void setup(Context context) {
 			try {
 				mSolrServer = new CommonsHttpSolrServer(SolrServerURL);
+				mHTablePool = new HTablePool();
 			} catch (MalformedURLException e1) {
 				e1.printStackTrace();
 			}

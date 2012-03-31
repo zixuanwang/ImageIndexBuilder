@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.EndianUtils;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
@@ -42,10 +43,12 @@ public class ImageIndexBuilder {
 				String imageHash = Bytes.toString(row.get());
 				byte[] family = Bytes.toBytes("d");
 				byte[] qualifier = Bytes.toBytes("id_0");
-				long imageKey = Bytes
-						.toLong(values.getValue(family, qualifier));
+				// imageKey is stored in little endian
+				long imageKey = EndianUtils.readSwappedLong(values.getValue(family, qualifier), 0);
 				mClient.addImage(imageHash, imageKey);
-				List<Bin> boWHistogram = mClient.getBoWFeature(imageKey);
+				List<Bin> boWHistogram = mClient.computeBoWFeature(imageKey);
+				mClient.computeColorFeature(imageKey);
+				mClient.computeShapeFeature(imageKey);
 				try {
 					for (Bin bin : boWHistogram) {
 						double score = bin.frequency;

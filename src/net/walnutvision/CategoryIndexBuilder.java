@@ -161,22 +161,34 @@ public class CategoryIndexBuilder {
 		@Override
 		public void reduce(Text key, Iterable<LongWritable> values,
 				Context context) throws IOException, InterruptedException {
-			System.out.println(key.toString());
 			HTable categoryTable = (HTable) mHTablePool
 					.getTable("category_index");
 			byte[] family = Bytes.toBytes("d");
-			Set<Long> uniqueSet = new HashSet<Long>();
-			for (LongWritable imageKey : values) {
-				uniqueSet.add(imageKey.get());
-			}
+			int columnSize = 100000;
+			int columnIndex = 0;
+			int i = 0;
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			Iterator<Long> uniqueSetIter = uniqueSet.iterator();
-			while (uniqueSetIter.hasNext()) {
-				Long imageKey = uniqueSetIter.next();
-				EndianUtils.writeSwappedLong(outputStream, imageKey);
+			for (LongWritable value : values) {
+				++i;
+				EndianUtils.writeSwappedLong(outputStream, value.get());
+				if (i % columnSize == 0) {
+					Put put = new Put(Bytes.toBytes(key.toString()));
+					put.add(family, Bytes.toBytes("" + columnIndex),
+							outputStream.toByteArray());
+					categoryTable.put(put);
+					++columnIndex;
+					outputStream.reset();
+				}
+			}
+			if (i % columnSize != 0) {
+				Put put = new Put(Bytes.toBytes(key.toString()));
+				put.add(family, Bytes.toBytes("" + columnIndex),
+						outputStream.toByteArray());
+				categoryTable.put(put);
+				++columnIndex;
 			}
 			Put put = new Put(Bytes.toBytes(key.toString()));
-			put.add(family, Bytes.toBytes("0"), outputStream.toByteArray());
+			put.add(family, Bytes.toBytes("next"), Bytes.toBytes(columnIndex));
 			categoryTable.put(put);
 			mHTablePool.putTable(categoryTable);
 		}

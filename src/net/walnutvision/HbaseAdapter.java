@@ -11,12 +11,11 @@ public class HbaseAdapter {
 		ArrayList<String> ret = new ArrayList<String>();
 		int i = 0;
 		while (true) {
-			String v = Bytes.toString(values.getValue(family,
-					Bytes.toBytes(prefix + i)));
+			byte[] v = values.getValue(family, Bytes.toBytes(prefix + i));
 			if (v == null) {
 				break;
 			}
-			ret.add(v);
+			ret.add(Bytes.toString(v));
 			++i;
 		}
 		return ret;

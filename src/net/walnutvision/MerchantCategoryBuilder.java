@@ -118,9 +118,9 @@ public class MerchantCategoryBuilder {
 		Job job = new Job(conf, "MerchantCategoryBuilder");
 		job.setJarByClass(MerchantCategoryBuilder.class);
 		Scan scan = new Scan();
-		TableMapReduceUtil.initTableMapperJob("item", scan, Mapper1.class,
+		TableMapReduceUtil.initTableMapperJob("test_item", scan, Mapper1.class,
 				Text.class, Text.class, job);
-		TableMapReduceUtil.initTableReducerJob("item", Reducer1.class, job);
+		TableMapReduceUtil.initTableReducerJob("test_item", Reducer1.class, job);
 		boolean success = job.waitForCompletion(true);
 		System.exit(success ? 0 : 1);
 	}
